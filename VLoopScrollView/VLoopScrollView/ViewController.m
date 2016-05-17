@@ -45,7 +45,7 @@
     
     //      测试图片url数组
     //      图片可以从1，2，3 ........ 很多 都兼容 (自己加吧 ～ sorry)
-    NSArray *testArray = @[@"",@"",@"http://develop.hospitalityinspired.com.cn:8080/cms/res/5/photo/About_ws1.jpg"];
+    NSArray *testArray = @[@"",@"",@""];
     
     //    方法：1  ， 把数组传过去就好
     [_scrollView logicalOfADScrollWithImageArray:testArray];
