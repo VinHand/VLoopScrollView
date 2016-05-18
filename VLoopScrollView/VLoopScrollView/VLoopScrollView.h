@@ -10,7 +10,7 @@
 
 @interface VLoopScrollView : UIScrollView<UIScrollViewDelegate>
 /**
- *  Give it your parameter
+ *  Give it your params
  *
  *  @param imageArray : Your array of imageURLs
  */
@@ -22,7 +22,7 @@
 - (void) addRepeatTimer;
 
 /**
- *  remember remove after add
+ *  remember remove after add Timer
  */
 - (void)removeTimer;
 

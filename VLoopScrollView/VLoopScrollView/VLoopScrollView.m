@@ -18,15 +18,20 @@
 #define pageControl_height 30
 
 #define AD_betweenLoopTime 2   //在此修改 图片切换间隔时间
-#define AD_LoopTime 0.5 //在此修改 图片切换速度（时间越短速度越快）
+#define AD_LoopTime 0.5 //在此修改 图片切换过程需要的时间
 
 @interface VLoopScrollView()
+/**
+ *  BEF = before
+ *  MID = middle
+ *  AFT = after
+ --- do not laugh (be my guest) lol
+ */
+@property (nonatomic, weak) UIImageView *imageView_BEF;
 
-@property (nonatomic, weak) UIImageView *imageView_before;
+@property (nonatomic, weak) UIImageView *imageView_MID;
 
-@property (nonatomic, weak) UIImageView *imageView_middle;
-
-@property (nonatomic, weak) UIImageView *imageView_after;
+@property (nonatomic, weak) UIImageView *imageView_AFT;
 
 @property (nonatomic, weak) UIPageControl *pageControl;
 
@@ -74,31 +79,31 @@
 - (void)setupUI
 {
     
-    CGRect rectBefore;
-    CGRect rectMiddle;
-    CGRect rectAfter;
+    CGRect rect_BEF;
+    CGRect rect_MID;
+    CGRect rect_AFT;
     
-    rectBefore = CGRectMake(0*scro_width, 0, scro_width, scro_height);
-    rectMiddle = CGRectMake(1*scro_width, 0, scro_width, scro_height);
-    rectAfter  = CGRectMake(2*scro_width, 0, scro_width, scro_height);
+    rect_BEF = CGRectMake(0*scro_width, 0, scro_width, scro_height);
+    rect_MID = CGRectMake(1*scro_width, 0, scro_width, scro_height);
+    rect_AFT  = CGRectMake(2*scro_width, 0, scro_width, scro_height);
 
-    UIImageView *imageView_before = [[UIImageView alloc] init];
-    imageView_before.backgroundColor = [UIColor orangeColor];
-    imageView_before.frame = rectBefore;
-    [self addSubview:imageView_before];
-    _imageView_before = imageView_before;
+    UIImageView *imageView_BEF = [[UIImageView alloc] init];
+    imageView_BEF.backgroundColor = [UIColor whiteColor];
+    imageView_BEF.frame = rect_BEF;
+    [self addSubview:imageView_BEF];
+    _imageView_BEF = imageView_BEF;
     
-    UIImageView *imageView_middle = [[UIImageView alloc] init];
-    imageView_before.backgroundColor = [UIColor orangeColor];
-    imageView_middle.frame = rectMiddle;
-    [self addSubview:imageView_middle];
-    _imageView_middle = imageView_middle;
+    UIImageView *imageView_MID = [[UIImageView alloc] init];
+    imageView_MID.backgroundColor = [UIColor whiteColor];
+    imageView_MID.frame = rect_MID;
+    [self addSubview:imageView_MID];
+    _imageView_MID = imageView_MID;
     
-    UIImageView *imageView_after = [[UIImageView alloc] init];
-    imageView_after.backgroundColor = [UIColor orangeColor];
-    imageView_after.frame = rectAfter;
-    [self addSubview:imageView_after];
-    _imageView_after = imageView_after;
+    UIImageView *imageView_AFT = [[UIImageView alloc] init];
+    imageView_AFT.backgroundColor = [UIColor whiteColor];
+    imageView_AFT.frame = rect_AFT;
+    [self addSubview:imageView_AFT];
+    _imageView_AFT = imageView_AFT;
     
 }
 
@@ -114,19 +119,19 @@
     //    防止数组为空
     if (_adImageArray.count)
     {
-        [self.imageView_before sd_setImageWithURL:[NSURL URLWithString:_adImageArray.lastObject] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
+        [_imageView_BEF sd_setImageWithURL:[NSURL URLWithString:_adImageArray.lastObject] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
         
-        [self.imageView_middle sd_setImageWithURL:[NSURL URLWithString:_adImageArray.firstObject] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
+        [_imageView_MID sd_setImageWithURL:[NSURL URLWithString:_adImageArray.firstObject] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
         
         
         //    特殊情况 数组元素只有一个的时候
         if (_adImageArray.count == 1) {
             
-            [self.imageView_after sd_setImageWithURL:[NSURL URLWithString:_adImageArray.firstObject] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
+            [_imageView_AFT sd_setImageWithURL:[NSURL URLWithString:_adImageArray.firstObject] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
         }
         else
         {
-            [self.imageView_after sd_setImageWithURL:[NSURL URLWithString:_adImageArray[1]] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
+            [_imageView_AFT sd_setImageWithURL:[NSURL URLWithString:_adImageArray[1]] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
         }
     }
 }
@@ -168,50 +173,52 @@
      before = 最后一个
      after = 1
      */
-    NSInteger page_before = 0;
-    NSInteger page_middle = 0;
-    NSInteger page_after  = 0;
+    NSInteger page_BEF = 0;
+    NSInteger page_MID = 0;
+    NSInteger page_AFT = 0;
     
     
-    //    －－－－－－－－－－－ 调整 逻辑位置 －－－－－－－－－－－
+    //    －－－－－－－－－－－ 计算得到 逻辑位置（下面用这个位置去加载图片） －－－－－－－－－－－
     if (self.contentOffset.x == 0)
     {
         //        往前滑了一格  (-)
-        page_before = [self changePage:_currentPage - 2];
-        page_middle = [self changePage:_currentPage - 1];
-        page_after =  [self changePage:_currentPage];
+        page_BEF = [self changePage:_currentPage - 2];
+        page_MID = [self changePage:_currentPage - 1];
+        page_AFT =  [self changePage:_currentPage];
         self.pageControl.currentPage = [self changePage:_currentPage - 1];
     }
     else if (self.contentOffset.x == scro_width * 2)
     {
         //        往后滑了一格  (+)
-        page_before = [self changePage:_currentPage];
-        page_middle = [self changePage:_currentPage + 1];
-        page_after =  [self changePage:_currentPage + 2];
+        page_BEF = [self changePage:_currentPage];
+        page_MID = [self changePage:_currentPage + 1];
+        page_AFT =  [self changePage:_currentPage + 2];
         self.pageControl.currentPage = [self changePage:_currentPage + 1];
     }
     else if (self.contentOffset.x == scro_width)
     {
         //        保持原来位置的时候  (not move)
-        page_before = [self changePage:_currentPage - 1];
-        page_middle = [self changePage:_currentPage];
-        page_after =  [self changePage:_currentPage + 1];
+        page_BEF = [self changePage:_currentPage - 1];
+        page_MID = [self changePage:_currentPage];
+        page_AFT =  [self changePage:_currentPage + 1];
     }
+    
     //    －－－－－－－－－－－－－－设置图片 －－－－－－－－－－－－－－－－－－－－－－
     //    防止数组为空 (0就不进入了)
     if (_adImageArray.count)
     {
         //        数组元素只有1个的 特殊情况
         if (_adImageArray.count == 1) {
-            
+        //        图片只有一个的时候不需要设置图片，因为都一样
         }
         else
         {
-            [self.imageView_before sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_before]] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
-            [self.imageView_middle sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_middle]] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
-            [self.imageView_after sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_after]] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
+            [_imageView_BEF sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_BEF]] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
+            [_imageView_MID sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_MID]] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
+            [_imageView_AFT sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_AFT]] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
         }
-        _currentPage = page_middle;
+//        middle 是主角
+        _currentPage = page_MID;
     }
     else
     {
@@ -226,10 +233,9 @@
 
 - (void)repeatMove
 {
-    //    NSLog(@"%s",__func__);
-    NSInteger page_before = 0;
-    NSInteger page_middle = 0;
-    NSInteger page_after  = 0;
+    NSInteger page_BEF = 0;
+    NSInteger page_MID = 0;
+    NSInteger page_AFT = 0;
     
     
     if (_adImageArray.count > 1)
@@ -238,21 +244,21 @@
             self.contentOffset = CGPointMake(scro_width*2, 0);
         }];
         
-        page_before = [self changePage:_currentPage];
-        page_middle = [self changePage:_currentPage + 1];
-        page_after  =  [self changePage:_currentPage + 2];
+        page_BEF = [self changePage:_currentPage];
+        page_MID = [self changePage:_currentPage + 1];
+        page_AFT  = [self changePage:_currentPage + 2];
         
         
         self.pageControl.currentPage = [self changePage:_currentPage + 1];
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(AD_LoopTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             
-            [self.imageView_before sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_before]] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
-            [self.imageView_middle sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_middle]] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
-            [self.imageView_after sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_after]] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
+            [_imageView_BEF sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_BEF]] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
+            [_imageView_MID sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_MID]] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
+            [_imageView_AFT sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_AFT]] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
             self.contentOffset = CGPointMake(scro_width, 0);
         });
-        _currentPage = page_middle;
+        _currentPage = page_MID;
         NSLog(@"--- currentPage is %ld",(long)_currentPage);
     }
     else if (_adImageArray.count == 1)
