@@ -107,7 +107,7 @@
     
 }
 
-- (void)logicalOfADScrollWithImageArray:(NSArray *)imageArray
+- (void)v_logicalOfADScrollWithImageArray:(NSArray *)imageArray
 {
     _pageControl.numberOfPages = imageArray.count;
     _adImageArray = imageArray;
@@ -136,7 +136,7 @@
     }
 }
 
-- (void)addPageControlWithNumberOfPage:(NSInteger)number currentPage:(NSInteger)currentPage controller:(UIViewController *)vc
+- (void)v_addPageControlWithNumberOfPage:(NSInteger)number currentPage:(NSInteger)currentPage controller:(UIViewController *)vc
 {
     UIPageControl *pageControl = [[UIPageControl alloc] init];
     
@@ -150,7 +150,7 @@
 }
 
 
-- (void) addRepeatTimer
+- (void)v_addRepeatTimer
 {
     if (!_adScrollTimer) {
         NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:AD_betweenLoopTime target:self selector:@selector(repeatMove) userInfo:nil repeats:YES];
@@ -158,7 +158,7 @@
     }
 }
 
-- (void)removeTimer
+- (void)v_removeTimer
 {
     [_adScrollTimer invalidate];
 }

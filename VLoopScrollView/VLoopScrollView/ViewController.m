@@ -48,20 +48,19 @@
     NSArray *testArray = @[@"",@"",@""];
     
     //    方法：1  ， 把数组传过去就好
-    [_scrollView logicalOfADScrollWithImageArray:testArray];
+    [_scrollView v_logicalOfADScrollWithImageArray:testArray];
     
     //    方法：2  ， 定时滚动  (if add than remove)
-    [_scrollView addRepeatTimer];
+    [_scrollView v_addRepeatTimer];
     
     //    方法：3  ， currentPage：按需求定 （这里是加到了当前控制器的View上）
-    [_scrollView addPageControlWithNumberOfPage:testArray.count currentPage:0 controller:self];
-    
+    [_scrollView v_addPageControlWithNumberOfPage:testArray.count currentPage:0 controller:self];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
     //    方法：4  （记得释放掉） ********************************** 重要的事情 说三遍（吹牛逼） ～
-    [_scrollView removeTimer];
+    [_scrollView v_removeTimer];
 }
 
 

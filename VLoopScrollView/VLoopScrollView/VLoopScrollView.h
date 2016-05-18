@@ -14,17 +14,17 @@
  *
  *  @param imageArray : Your array of imageURLs
  */
-- (void)logicalOfADScrollWithImageArray:(NSArray *)imageArray;
+- (void) v_logicalOfADScrollWithImageArray:(NSArray *)imageArray;
 
 /**
  *  if you want repeat then add it
  */
-- (void) addRepeatTimer;
+- (void) v_addRepeatTimer;
 
 /**
  *  remember remove after add Timer
  */
-- (void)removeTimer;
+- (void) v_removeTimer;
 
 /**
  *  about PageControl
@@ -32,6 +32,6 @@
  *  @param number      total number of pages
  *  @param currentPage
  */
-- (void)addPageControlWithNumberOfPage:(NSInteger)number currentPage:(NSInteger)currentPage controller:(UIViewController *)vc;
+- (void) v_addPageControlWithNumberOfPage:(NSInteger)number currentPage:(NSInteger)currentPage controller:(UIViewController *)vc;
 
 @end
