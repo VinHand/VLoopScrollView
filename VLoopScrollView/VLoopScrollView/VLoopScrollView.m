@@ -20,6 +20,8 @@
 #define AD_betweenLoopTime 2   //在此修改 图片切换间隔时间
 #define AD_LoopTime 0.5 //在此修改 图片切换过程需要的时间
 
+#define placeHolderString @"placeholder.jpg"
+
 @interface VLoopScrollView()
 /**
  *  BEF = before
@@ -27,6 +29,7 @@
  *  AFT = after
  --- do not laugh (be my guest) lol
  */
+
 @property (nonatomic, weak) UIImageView *imageView_BEF;
 
 @property (nonatomic, weak) UIImageView *imageView_MID;
@@ -42,6 +45,7 @@
 @property (nonatomic, strong) NSArray *adImageArray;
 
 @property (nonatomic, assign) NSInteger currentPage;
+
 
 @end
 
@@ -119,19 +123,19 @@
     //    防止数组为空
     if (_adImageArray.count)
     {
-        [_imageView_BEF sd_setImageWithURL:[NSURL URLWithString:_adImageArray.lastObject] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
+        [_imageView_BEF sd_setImageWithURL:[NSURL URLWithString:_adImageArray.lastObject] placeholderImage:[UIImage imageNamed:placeHolderString] options:SDWebImageDelayPlaceholder];
         
-        [_imageView_MID sd_setImageWithURL:[NSURL URLWithString:_adImageArray.firstObject] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
+        [_imageView_MID sd_setImageWithURL:[NSURL URLWithString:_adImageArray.firstObject] placeholderImage:[UIImage imageNamed:placeHolderString] options:SDWebImageDelayPlaceholder];
         
         
         //    特殊情况 数组元素只有一个的时候
         if (_adImageArray.count == 1) {
             
-            [_imageView_AFT sd_setImageWithURL:[NSURL URLWithString:_adImageArray.firstObject] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
+            [_imageView_AFT sd_setImageWithURL:[NSURL URLWithString:_adImageArray.firstObject] placeholderImage:[UIImage imageNamed:placeHolderString] options:SDWebImageDelayPlaceholder];
         }
         else
         {
-            [_imageView_AFT sd_setImageWithURL:[NSURL URLWithString:_adImageArray[1]] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
+            [_imageView_AFT sd_setImageWithURL:[NSURL URLWithString:_adImageArray[1]] placeholderImage:[UIImage imageNamed:placeHolderString] options:SDWebImageDelayPlaceholder];
         }
     }
 }
@@ -213,9 +217,9 @@
         }
         else
         {
-            [_imageView_BEF sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_BEF]] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
-            [_imageView_MID sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_MID]] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
-            [_imageView_AFT sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_AFT]] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
+            [_imageView_BEF sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_BEF]] placeholderImage:[UIImage imageNamed:placeHolderString] options:SDWebImageDelayPlaceholder];
+            [_imageView_MID sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_MID]] placeholderImage:[UIImage imageNamed:placeHolderString] options:SDWebImageDelayPlaceholder];
+            [_imageView_AFT sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_AFT]] placeholderImage:[UIImage imageNamed:placeHolderString] options:SDWebImageDelayPlaceholder];
         }
 //        middle 是主角
         _currentPage = page_MID;
@@ -253,9 +257,9 @@
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(AD_LoopTime * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             
-            [_imageView_BEF sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_BEF]] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
-            [_imageView_MID sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_MID]] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
-            [_imageView_AFT sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_AFT]] placeholderImage:[UIImage imageNamed:@"placeholder.jpg"] options:SDWebImageDelayPlaceholder];
+            [_imageView_BEF sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_BEF]] placeholderImage:[UIImage imageNamed:placeHolderString] options:SDWebImageDelayPlaceholder];
+            [_imageView_MID sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_MID]] placeholderImage:[UIImage imageNamed:placeHolderString] options:SDWebImageDelayPlaceholder];
+            [_imageView_AFT sd_setImageWithURL:[NSURL URLWithString:_adImageArray[page_AFT]] placeholderImage:[UIImage imageNamed:placeHolderString] options:SDWebImageDelayPlaceholder];
             self.contentOffset = CGPointMake(scro_width, 0);
         });
         _currentPage = page_MID;
